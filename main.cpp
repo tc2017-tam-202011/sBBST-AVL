@@ -36,6 +36,9 @@ class avl_tree {
 public:
     int height(node *);
     int difference(node *);
+    int numNodes(node *);
+    int numNodesSmallerThan(node *, int);
+    int numNodesGreaterThan(node *, int);
     node *rr_rotation(node *);
     node *ll_rotation(node *);
     node *lr_rotation(node *);
@@ -83,6 +86,54 @@ int avl_tree::difference(node *tree) {
     int right_height = height(tree->right);
     int balance_factor = left_height - right_height;
     return balance_factor;
+}
+
+/*
+ * int avl_tree::numNodes(node *)
+ * This method counts and returns the number of nodes in a given tree.
+ */
+int avl_tree::numNodes(node *tree) {
+    if (tree == nullptr) {
+        return 0;
+    } else {
+        return 1 + numNodes(tree->left) + numNodes(tree->right);
+    }
+}
+
+/*
+ * int avl_tree::numNodesSmallerThan(node *, int)
+ * This method counts and returns the number of nodes in a given tree that
+ * have a value smaller than a particular given value.
+ */
+int avl_tree::numNodesSmallerThan(node *tree, int x) {
+    if (tree == nullptr) {
+        return 0;
+    }
+    if (tree->value == x) {
+        return numNodes(tree->left);
+    } else if (tree->value < x) {
+        return 1 + numNodes(tree->left) + numNodesSmallerThan(tree->right, x);
+    } else {
+        return numNodesSmallerThan(tree->left, x);
+    }
+}
+
+/*
+ * int avl_tree::numNodesGreaterThan(node *, int)
+ * This method counts and returns the number of nodes in a given tree that
+ * have a value greater than a particular fiven value.
+ */
+int avl_tree::numNodesGreaterThan(node *tree, int x) {
+    if (tree == nullptr) {
+        return 0;
+    }
+    if (tree->value == x) {
+        return numNodes(tree->right);
+    } else if (tree->value > x) {
+        return 1 + numNodes(tree->right) + numNodesGreaterThan(tree->left, x);
+    } else {
+        return numNodesGreaterThan(tree->right, x);
+    }
 }
 
 /*
