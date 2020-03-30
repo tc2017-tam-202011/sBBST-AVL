@@ -34,6 +34,7 @@ typedef struct tree_node node;
 // needed for a AVL sBBST.
 class avl_tree {
     int elements;
+    int kthSmallest(node *, int, int &);
 public:
     int height(node *);
     int difference(node *);
@@ -42,6 +43,7 @@ public:
     int numNodesGreaterThan(node *, int);
     int getNumElements();
     int kSmallest(node *, int);
+    int kSmallest_v2(node *, int k);
     node *rr_rotation(node *);
     node *ll_rotation(node *);
     node *lr_rotation(node *);
@@ -191,6 +193,42 @@ int avl_tree::kSmallest(node *rootNode, int k) {
     }
     return ksmall;
 }
+
+/*
+ * int avl_tree::kthSmallest(node *, int, int)
+ * Recursive private method that let us find the kth smallest number
+ * within a tree. It receives the node to look into, the kth needed
+ * and the number of visits already done.
+ */
+int avl_tree::kthSmallest(node *node, int k, int &visits) {
+    int smallest;
+    if (node->left == nullptr) {
+        visits++;
+        if (visits == k) {
+            return node->value;
+        } else {
+            return kthSmallest(node->right, k, visits);
+        }
+    } else {
+        return kthSmallest(node->left, k, visits);
+    }
+}
+
+/*
+ * int avl_tree::kSmallest_v2(node *, int k)
+ * This method searches for and returns the kth smallest value within a tree.
+ * If k is less than 1 or greater than the total amounts of nodes within the
+ * tree, the function raises an exception.
+ * This algorithm uses the recursive private method int kthSmallest()
+ */
+int avl_tree::kSmallest_v2(node *rootNode, int k) {
+    if (k < 1 || k > this->elements) {
+        throw invalid_argument("impossible value for k");
+    }
+    int visited = 0;
+    return kthSmallest(rootNode, k, visited);
+}
+
 /*
  * node *avl_tree::rr_rotation(node *)
  * This method performs a right right rotation on a node to balance it.
