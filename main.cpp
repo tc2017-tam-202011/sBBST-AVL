@@ -47,6 +47,7 @@ public:
     node *insert(node *, int);
     node *deleteNode(node *, int);
     node *minValueNode(node *);
+    node *search(node *, int);
     void show(node *, int);
     void inorder(node *);
     void preorder(node *);
@@ -282,6 +283,24 @@ node *avl_tree::minValueNode(node *rootNode) {
         current = current->left;
     }
     return current;
+}
+
+/*
+ * node *avl_tree::search(node *, int)
+ * This method search for a key within the tree, and returns the node that
+ * holds that value if it finds it.
+ */
+node *avl_tree::search(node *tree, int value) {
+    if (tree == nullptr) {
+        return nullptr;
+    }
+    if (tree->value == value) {
+        return tree;
+    } else if (tree->value > value) {
+        return search(tree->left, value);
+    } else {
+        return search(tree->right, value);
+    }
 }
 
 /*
