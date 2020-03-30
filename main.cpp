@@ -16,6 +16,7 @@
  */
 
 #include <iostream>
+#include <stdexcept>
 
 using namespace std;
 
@@ -39,6 +40,8 @@ public:
     int numNodes(node *);
     int numNodesSmallerThan(node *, int);
     int numNodesGreaterThan(node *, int);
+    int getNumElements();
+    int kSmallest(node *, int);
     node *rr_rotation(node *);
     node *ll_rotation(node *);
     node *lr_rotation(node *);
@@ -137,6 +140,57 @@ int avl_tree::numNodesGreaterThan(node *tree, int x) {
     }
 }
 
+/*
+ * int avl_tree::getNumElements()
+ * Getter for the elements property.
+ */
+int avl_tree::getNumElements() {
+    return this->elements;
+}
+
+/*
+ * int avl_tree::kSmallest(node *, int);
+ * This method searches for and returns the kth smallest value within a tree.
+ * If k is less than 1 or greater than the total amounts of nodes within the
+ * tree, the function raises an exception.
+ * This algorithm uses the Morris Traversal
+ */
+int avl_tree::kSmallest(node *rootNode, int k) {
+    if (k < 1 || k > this->elements) {
+        throw invalid_argument("impossible value for k");
+    }
+    int count = 0;
+    int ksmall = INT_MIN;
+    node *curr = rootNode;
+
+    while (curr != nullptr) {
+        if (curr->left == nullptr) {
+            count++;
+            if (count == k) {
+                ksmall = curr->value;
+            }
+            curr = curr->right;
+        } else {
+            node *pre = curr->left;
+            while (pre->right != nullptr && pre->right != curr) {
+                pre = pre->right;
+            }
+
+            if (pre->right == nullptr) {
+                pre->right = curr;
+                curr = curr->left;
+            } else {
+                pre->right = nullptr;
+                count++;
+                if (count == k) {
+                    ksmall = curr->value;
+                }
+                curr = curr->right;
+            }
+        }
+    }
+    return ksmall;
+}
 /*
  * node *avl_tree::rr_rotation(node *)
  * This method performs a right right rotation on a node to balance it.
