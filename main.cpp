@@ -346,10 +346,12 @@ node *avl_tree::deleteNode(node *rootNode, int value) {
             if (rootNode->left == nullptr) {
                 node *temp = root->right;
                 free(rootNode);
+                this->elements--;
                 return temp;
             } else if (rootNode->right == nullptr) {
                     node *temp = root->left;
                     free(rootNode);
+                    this->elements--;
                     return temp;
             }
             // if the node has two children, then we search for the
@@ -357,7 +359,6 @@ node *avl_tree::deleteNode(node *rootNode, int value) {
             node *temp = minValueNode(rootNode->right);
             rootNode->value = temp->value;
             rootNode->right = deleteNode(rootNode->right, temp->value);
-            this->elements -= 1;
         }
     }
     balance(rootNode);
@@ -455,6 +456,37 @@ void avl_tree::postorder(node *tree) {
 }
 
 int main() {
-    std::cout << "Hello, World!" << std::endl;
+    int Q;
+    avl_tree tree;
+    cin >> Q;
+    while (Q--) {
+        char option;
+        int n;
+        cin >> option >> n;
+        switch(option){
+            case 'I':
+                root = tree.insert(root, n);
+                //tree.inorder(root);
+                //cout << endl;
+                break;
+            case 'D':
+                root = tree.deleteNode(root, n);
+                //tree.inorder(root);
+                //cout << endl;
+                break;
+            case 'C':
+                cout << tree.numNodesSmallerThan(root, n) << endl;
+                break;
+            case 'K':
+                if (n < 1 || n > tree.getNumElements()) {
+                    cout << "invalid" << endl;
+                } else {
+                    cout << tree.kSmallest_v2(root, n) << endl;
+                }
+                break;
+            default:
+                break;
+        }
+    }
     return 0;
 }
